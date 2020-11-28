@@ -1,12 +1,9 @@
-using System;
-using System.Net.Http;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Text;
+﻿using LineDC.Liff;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace FreedomSite
 {
@@ -14,12 +11,19 @@ namespace FreedomSite
     {
         public static async Task Main(string[] args)
         {
+            var stream = Assembly.GetExecutingAssembly()
+                .GetManifestResourceStream("FreedomSite.appsettings.json");
+            var config = new ConfigurationBuilder()
+                .AddJsonStream(stream)
+                .Build();
+            var liffId = config.GetValue<string>("LiffId");
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
-
-            builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
-            await builder.Build().RunAsync();
+            builder.Services.AddBaseAddressHttpClient();
+            builder.Services.AddSingleton<ILiffClient>(new LiffClient(liffId));
+            var host = builder.Build();
+            await host.RunAsync();
         }
+
     }
 }

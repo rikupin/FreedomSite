@@ -1,0 +1,83 @@
+﻿@page "/profile"
+@inject ILiffClient Liff
+@inject IJSRuntime JSRuntime
+
+@if (UserProfile == null)
+{
+    <img src="image/loading.gif" alt="Loading...">
+}
+else
+{
+    <div class="card" style="width: 20rem;">
+        <img class="card-img" src="@UserProfile?.PictureUrl" alt="Loading image..." />
+        <div class="card-body">
+            <h5 class="card-title">@UserProfile?.DisplayName</h5>
+            <p class="card-text">@UserProfile?.StatusMessage</p>
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item">LIFF Ver.: @Version</li>
+            <li class="list-group-item">OS: @OS</li>
+            <li class="list-group-item">Language: @Language</li>
+            <li class="list-group-item">TokenId: @TokenId</li>
+            <li class="list-group-item">Type: @Context?.Type</li>
+            <li class="list-group-item">ViewType: @Context?.ViewType</li>
+            <li class="list-group-item">UserId: @Context?.UserId</li>
+            @if (@Context?.Type == ContextType.Utou)
+            {
+                <li class="list-group-item">UtouId: @Context?.UtouId</li>
+            }
+            else if (@Context?.Type == ContextType.Room)
+            {
+                <li class="list-group-item">RoomId: @Context?.RoomId</li>
+            }
+            else if (@Context?.Type == ContextType.Group)
+            {
+                <li class="list-group-item">GroupId: @Context?.GroupId</li>
+            }
+        </ul>
+    </div>
+}
+<Alert Message="@ErrorMessage" AlertType="danger"></Alert>
+
+@code{
+    protected LineDC.Liff.Data.Profile UserProfile { get; set; }
+    protected LiffContext Context { get; set; }
+    protected string TokenId { get; set; }
+    protected string OS { get; set; }
+    protected string Language { get; set; }
+    protected string Version { get; set; }
+    protected string ErrorMessage { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (!Liff.Initialized)
+            {
+                await Liff.Init(JSRuntime);
+                if (!await Liff.IsLoggedIn())
+                {
+                    await Liff.Login();
+                    return;
+                }
+                Liff.Initialized = true;
+            }
+            UserProfile = await Liff.GetProfile();
+            if (await Liff.IsInClient())
+            {
+                Context = await Liff.GetContext();
+            }
+            var idtoken = await Liff.GetDecodedIDToken();
+            TokenId = idtoken.Sub;
+            OS = await Liff.GetOS();
+            Language = await Liff.GetLanguage();
+            Version = await Liff.GetVersion();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            ErrorMessage = e.ToString();
+        }
+    }
+
+}
