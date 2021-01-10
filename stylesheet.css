@@ -2,19 +2,24 @@
     font-family: 'Noto Sans JP', sans-serif;
     font-size: 20px;
 }
-.Gray{
+.gray{
     color: gray;
 }
 .bg-gradient {
-    background: linear-gradient(#BE93C5, #9198e5);
+    background: linear-gradient(90deg, #fe289d, #ff4d60 28%, #fd7c66 38%, #be5fc7 100%, #fff);
     color: white;
 }
 .gradient{
-    background: linear-gradient(#9198e5 ,#BE93C5);
+    background: linear-gradient(90deg, #fe289d, #ff4d60 28%, #fd7c66 38%, #be5fc7 100%, #fff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: rgba(255,255,255,0.0);
-    color:  #7BC6CC;
+    color:   #ff4d60;
 }
-.container li{
-    margin-top: 30px;
+h1{
+    letter-spacing: 5px;
+    font-size: 40px;
+}
+body{
+    background-color: #1a1a1a;
+    color: white;
 }
