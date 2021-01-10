@@ -5,15 +5,11 @@
 .gray{
     color: gray;
 }
-.bg-gradient {
-    background: linear-gradient(90deg, #fe289d, #ff4d60 28%, #fd7c66 38%, #be5fc7 100%, #fff);
-    color: white;
-}
 .gradient{
     background: linear-gradient(90deg, #fe289d, #ff4d60 28%, #fd7c66 38%, #be5fc7 100%, #fff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: rgba(255,255,255,0.0);
-    color:   #ff4d60;
+    color:#ff4d60;
 }
 h1{
     letter-spacing: 5px;
